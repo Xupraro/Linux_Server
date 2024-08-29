@@ -1,0 +1,56 @@
+﻿  正在验证源
+  正在将源远程复制到“192.168.31.83”
+  正在验证体系结构
+  正在验证体系结构
+  正在启动远程生成
+  正在编译源:
+  main.cpp
+D:\vs\Linux_Server\Linux_Server\main.cpp(59,46): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(59,46): warning :    59 |     if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(59,46): warning :       |                                              ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(82,46): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(82,46): warning :    82 |     if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(82,46): warning :       |                                              ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(90,30): warning : conversion from ‘uint64_t’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+D:\vs\Linux_Server\Linux_Server\main.cpp(90,30): warning :    90 |     int hang = mysql_num_rows(res);
+D:\vs\Linux_Server\Linux_Server\main.cpp(90,30): warning :       |                ~~~~~~~~~~~~~~^~~~~
+D:\vs\Linux_Server\Linux_Server\main.cpp(146,46): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(146,46): warning :   146 |     if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(146,46): warning :       |                                              ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(231,58): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(231,58): warning :   231 |                 if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(231,58): warning :       |                                                          ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(233,58): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(233,58): warning :   233 |                 if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(233,58): warning :       |                                                          ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(253,54): warning : suggest braces around empty body in an ‘if’ statement [-Wempty-body]
+D:\vs\Linux_Server\Linux_Server\main.cpp(253,54): warning :   253 |             if (mysql_query(mysql, sql.c_str()) == 0);
+D:\vs\Linux_Server\Linux_Server\main.cpp(253,54): warning :       |                                                      ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(286,1): warning : no return statement in function returning non-void [-Wreturn-type]
+D:\vs\Linux_Server\Linux_Server\main.cpp(286,1): warning :   286 | }
+D:\vs\Linux_Server\Linux_Server\main.cpp(286,1): warning :       | ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(392,30): warning : comparison of integer expressions of different signedness: ‘size_t’ {aka ‘long unsigned int’} and ‘int’ [-Wsign-compare]
+D:\vs\Linux_Server\Linux_Server\main.cpp(392,30): warning :   392 |                     if (rlen == -1)
+D:\vs\Linux_Server\Linux_Server\main.cpp(392,30): warning :       |                         ~~~~~^~~~~
+D:\vs\Linux_Server\Linux_Server\main.cpp(431,42): warning : comparison of integer expressions of different signedness: ‘int’ and ‘std::__cxx11::basic_string<char>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+D:\vs\Linux_Server\Linux_Server\main.cpp(431,55): warning : conversion from ‘std::__cxx11::basic_string<char>::size_type’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+D:\vs\Linux_Server\Linux_Server\main.cpp(447,46): warning : comparison of integer expressions of different signedness: ‘int’ and ‘std::__cxx11::basic_string<char>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+D:\vs\Linux_Server\Linux_Server\main.cpp(447,46): warning :   447 |                             for (int k = 0;k < msg.size();k++)
+D:\vs\Linux_Server\Linux_Server\main.cpp(447,46): warning :       |                                            ~~^~~~~~~~~~~~
+D:\vs\Linux_Server\Linux_Server\main.cpp(465,49): warning : comparison of integer expressions of different signedness: ‘std::__cxx11::basic_string<char>::size_type’ {aka ‘long unsigned int’} and ‘int’ [-Wsign-compare]
+D:\vs\Linux_Server\Linux_Server\main.cpp(465,49): warning :   465 |                         if (mulu.find(filename) == -1)
+D:\vs\Linux_Server\Linux_Server\main.cpp(465,49): warning :       |                             ~~~~~~~~~~~~~~~~~~~~^~~~~
+D:\vs\Linux_Server\Linux_Server\main.cpp(62,1): warning : control reaches end of non-void function [-Wreturn-type]
+D:\vs\Linux_Server\Linux_Server\main.cpp(62,1): warning :    62 | }
+D:\vs\Linux_Server\Linux_Server\main.cpp(62,1): warning :       | ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(126,1): warning : control reaches end of non-void function [-Wreturn-type]
+D:\vs\Linux_Server\Linux_Server\main.cpp(126,1): warning :   126 | }
+D:\vs\Linux_Server\Linux_Server\main.cpp(126,1): warning :       | ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(166,1): warning : control reaches end of non-void function [-Wreturn-type]
+D:\vs\Linux_Server\Linux_Server\main.cpp(166,1): warning :   166 | }
+D:\vs\Linux_Server\Linux_Server\main.cpp(166,1): warning :       | ^
+D:\vs\Linux_Server\Linux_Server\main.cpp(269,1): warning : control reaches end of non-void function [-Wreturn-type]
+D:\vs\Linux_Server\Linux_Server\main.cpp(269,1): warning :   269 | }
+D:\vs\Linux_Server\Linux_Server\main.cpp(269,1): warning :       | ^
+  正在链接对象
+  Linux_Server.vcxproj -> D:\vs\Linux_Server\Linux_Server\bin\x64\Debug\Linux_Server.out
