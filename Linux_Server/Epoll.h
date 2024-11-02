@@ -12,11 +12,10 @@ public:
 	int Event_Del(int Socket_fd);
 	int GetEvents_fd(int i);
 	int GetEpoll_fd();
+	int GetWait_Count();
 	epoll_event* GetEvents();
 private:
-	int Timeout;
-	int epoll_fd;
-	int events_length;
+	int epoll_fd, wait_count;
 	epoll_event event;
 	epoll_event* events;
 };

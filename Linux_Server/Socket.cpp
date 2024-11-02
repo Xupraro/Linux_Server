@@ -1,5 +1,16 @@
 ﻿#include "Socket.h"
 
+Socket::Socket()
+{
+	this->Client_Count = 0;
+	this->clients = new int[1024] {0};
+	this->client_len = sizeof(this->Client_Sock);
+}
+
+Socket::~Socket()
+{
+}
+
 bool Socket::Init()
 {
 	if (Server_Socket() == -1)
@@ -25,12 +36,11 @@ int Socket::Server_Socket()
 
 int Socket::Server_Bind()
 {
-	uint16_t port;
-	cout << "请输入端口:" << endl;
-	cin >> port;
+	std::cout << "请输入端口:";
+	std::cin >> this->port;
 	this->server_addr.sin_family = AF_INET;
 	this->server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	this->server_addr.sin_port = htons(port);
+	this->server_addr.sin_port = htons(this->port);
 	return bind(this->Server_Sock, (struct sockaddr*)&this->server_addr, sizeof(this->server_addr));
 }
 
@@ -39,7 +49,23 @@ int Socket::Server_Listen()
 	return listen(this->Server_Sock, 5);
 }
 
-int Socket::GetSock()
+int Socket::Server_Accept()
+{
+	this->Client_Sock = accept(this->Server_Sock, (struct sockaddr*)&this->client_addr, &this->client_len);
+	return this->Client_Sock;
+}
+
+int Socket::GetS_Sock()
 {
 	return this->Server_Sock;
+}
+
+int Socket::GetC_Sock()
+{
+	return this->Client_Sock;
+}
+
+int Socket::GetClients_fd(int i)
+{
+	return 0;
 }

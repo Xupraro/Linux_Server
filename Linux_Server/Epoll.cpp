@@ -1,11 +1,8 @@
 #include "Epoll.h"
-#include<iostream>
 
 Epoll::Epoll()
 {
-	this->Timeout = -1;
-	this->events_length = 1024;
-	this->events = new epoll_event[this->events_length];
+	this->events = new epoll_event[1024]{ 0 };
 }
 
 Epoll::~Epoll()
@@ -34,8 +31,8 @@ int Epoll::Epoll_Create()
 
 int Epoll::Epoll_Wait()
 {
-	std::cout << "zxc!" << std::endl;
-	return epoll_wait(this->epoll_fd, this->events, this->events_length, this->Timeout);
+	this->wait_count = epoll_wait(this->epoll_fd, this->events, 1024, -1);
+	return this->wait_count;
 }
 
 int Epoll::Event_Add(int Socket_fd, EPOLL_EVENTS type)
@@ -58,6 +55,11 @@ int Epoll::GetEvents_fd(int i)
 int Epoll::GetEpoll_fd()
 {
 	return this->epoll_fd;
+}
+
+int Epoll::GetWait_Count()
+{
+	return this->wait_count;
 }
 
 epoll_event* Epoll::GetEvents()

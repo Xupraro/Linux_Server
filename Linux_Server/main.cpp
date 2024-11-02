@@ -1,4 +1,4 @@
-﻿#include <cstdio>
+﻿#include<cstdio>
 #include<stdlib.h>
 #include<string.h>
 #include<unistd.h>
@@ -15,6 +15,9 @@
 #include<mysql/mysql.h>
 #include<mutex>
 #include<netinet/tcp.h>
+#include<memory>
+#include"Socket.h"
+#include"Epoll.h"
 using namespace std;
 
 mutex mtx;
@@ -287,14 +290,14 @@ void* thread_siliao(void* args)
 
 void Server(char* arg)
 {
-    int server_sock, client_sock, client_num = 0;
+    int client_sock, client_num = 0;
     int* client = new int[1024];
     for (int i = 0;i < 1024;i++)
         client[i] = -1;
-    sockaddr_in server_addr, client_addr;
+    sockaddr_in /*server_addr, */client_addr;
 
-    server_sock = socket(PF_INET, SOCK_STREAM, 0);
-    if (server_sock == -1)
+    /*Socket_sock->GetS_Sock() = socket(PF_INET, SOCK_STREAM, 0);
+    if (Socket_sock->GetS_Sock() == -1)
     {
         cout << "socket error:" << strerror(errno) << endl;
         return;
@@ -309,60 +312,76 @@ void Server(char* arg)
     cin >> port;
     server_addr.sin_port = htons(port);
 
-    int ret = bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    int ret = bind(Socket_sock->GetS_Sock(), (struct sockaddr*)&server_addr, sizeof(server_addr));
     if (ret == -1)
     {
         cout << "bind error:" << strerror(errno) << endl;
-        close(server_sock);
+        close(Socket_sock->GetS_Sock());
         return;
     }
 
-    ret = listen(server_sock, 5);
+    ret = listen(Socket_sock->GetS_Sock(), 5);
     if (ret == -1)
     {
         cout << "listen error:" << strerror(errno) << endl;
-        close(server_sock);
+        close(Socket_sock->GetS_Sock());
+        return;
+    }*/
+    shared_ptr<Socket> Socket_sock = make_shared<Socket>();
+    if (!Socket_sock->Init())
+    {
+        cout << "Socket_Init error:" << strerror(errno) << endl;
+        close(Socket_sock->GetS_Sock());
         return;
     }
 
-    epoll_event event;
+    /*epoll_event event;
     int event_fd, event_cnt;
     epoll_event* event_num = new epoll_event[10];
     event_fd = epoll_create(1);
     if (event_fd == -1)
     {
         cout << "epoll_create error:" << strerror(errno) << endl;
-        close(server_sock);
+        close(Socket_sock->GetS_Sock());
         return;
     }
 
     event.events = EPOLLIN;
-    event.data.fd = server_sock;
-    epoll_ctl(event_fd, EPOLL_CTL_ADD, server_sock, &event);
+    event.data.fd = Socket_sock->GetS_Sock();
+    epoll_ctl(event_fd, EPOLL_CTL_ADD, Socket_sock->GetS_Sock(), &event);*/
+    shared_ptr<Epoll> epoll = make_shared<Epoll>();
+    if (!epoll->Init(Socket_sock->GetS_Sock(), EPOLLIN))
+    {
+        cout << "Epoll_Init error:" << strerror(errno) << endl;
+        close(Socket_sock->GetS_Sock());
+        close(epoll->GetEpoll_fd());
+        return;
+    }
 
     cout << "服务端已启动......" << endl;
 
     while (true)
     {
-        event_cnt = epoll_wait(event_fd, event_num, 10, 1000);
-        if (event_cnt == -1)
+        //event_cnt = epoll_wait(event_fd, event_num, 10, 1000);
+        epoll->Epoll_Wait();
+        if (epoll->GetWait_Count() == -1)
         {
-            cout << "epoll_wait error:" << strerror(errno) << endl;
-            close(server_sock);
+            cout << "Epoll_Wait error:" << strerror(errno) << endl;
+            close(Socket_sock->GetS_Sock());
             return;
         }
-        else if (event_cnt == 0)
+        else if (epoll->GetWait_Count() == 0)
         {
             continue;
         }
-        else if (event_cnt > 0)
+        else if (epoll->GetWait_Count() > 0)
         {
-            for (int i = 0;i < event_cnt;i++)
+            for (int i = 0;i < epoll->GetWait_Count();i++)
             {
-                if (event_num[i].data.fd == server_sock)
+                if (epoll->GetEvents_fd(i) == Socket_sock->GetS_Sock())
                 {
                     socklen_t client_len = sizeof(client_addr);
-                    client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_len);
+                    client_sock = accept(Socket_sock->GetS_Sock(), (struct sockaddr*)&client_addr, &client_len);
                     if (client_sock == -1)
                     {
                         cout << "accept error:" << strerror(errno) << endl;
@@ -370,9 +389,10 @@ void Server(char* arg)
                     }
 
                     cout << "客户端" << client_sock << "已连接！" << endl;
-                    event.events = EPOLLIN;
+                    /*event.events = EPOLLIN;
                     event.data.fd = client_sock;
-                    epoll_ctl(event_fd, EPOLL_CTL_ADD, client_sock, &event);
+                    epoll_ctl(event_fd, EPOLL_CTL_ADD, client_sock, &event);*/
+                    epoll->Event_Add(client_sock, EPOLLIN);
                     client_num++;
 
                     for (int j = 0;j < client_num;j++)
@@ -388,7 +408,7 @@ void Server(char* arg)
                 {
                     string msg;
                     char buf[10 * 1024] = { 0 };
-                    size_t rlen = read(event_num[i].data.fd, &buf, sizeof(buf));
+                    size_t rlen = read(epoll->GetEvents_fd(i), &buf, sizeof(buf));
                     if (rlen == -1)
                     {
                         cout << "read error:" << strerror(errno) << endl;
@@ -400,14 +420,15 @@ void Server(char* arg)
                     {
                         for (int j = 0;j < client_num;j++)
                         {
-                            if (event_num[i].data.fd==client[j])
+                            if (epoll->GetEvents_fd(i)==client[j])
                             {
                                 client[j] = -1;
                                 break;
                             }
                         }
-                        epoll_ctl(event_fd, EPOLL_CTL_DEL, event_num[i].data.fd, NULL);
-                        close(event_num[i].data.fd);
+                        //epoll_ctl(event_fd, EPOLL_CTL_DEL, epoll->GetEvents_fd(i), NULL);
+                        epoll->Event_Del(epoll->GetEvents_fd(i));
+                        close(epoll->GetEvents_fd(i));
                         client_num--;
 
                         pthread_t PID = thread_i;
@@ -415,15 +436,15 @@ void Server(char* arg)
                         delete_msg dm;
                         dm.client = client;
                         dm.client_num = client_num;
-                        dm.client_sock = event_num[i].data.fd;
+                        dm.client_sock = epoll->GetEvents_fd(i);
                         pthread_create(&PID, NULL, thread_disconnected, (void*)&dm);
 
-                        cout << "客户端" << event_num[i].data.fd << "断开连接！" << endl;
+                        cout << "客户端" << epoll->GetEvents_fd(i) << "断开连接！" << endl;
                         continue;
                     }
                     else if (msg.substr(0, 5) == "TEXT:")
                     {
-                        cout << "客户端" << event_num[i].data.fd << ":" << msg << endl;
+                        cout << "客户端" << epoll->GetEvents_fd(i) << ":" << msg << endl;
                         for (int j = 0;j < client_num;j++)
                         {
                             int filesize = stoi(msg.substr(msg.find("##") + 2, msg.find("##", 7) - msg.find("##") - 2));
@@ -438,7 +459,7 @@ void Server(char* arg)
                             if (wlen == -1)
                             {
                                 cout << "write error:" << strerror(errno) << endl;
-                                close(event_num[i].data.fd);
+                                close(epoll->GetEvents_fd(i));
                                 break;
                             }
                             
@@ -476,7 +497,7 @@ void Server(char* arg)
                         thread_i++;
                         thread_msg tm;
                         strcpy(tm.msg, msg.data());
-                        tm.client_sock = event_num[i].data.fd;
+                        tm.client_sock = epoll->GetEvents_fd(i);
                         tm.client = client;
                         tm.client_num = client_num;
                         pthread_create(&PID, NULL, thread_yanzheng, (void*)&tm);
@@ -487,15 +508,15 @@ void Server(char* arg)
                         thread_i++;
                         siliao_msg sm;
                         strcpy(sm.msg, msg.data());
-                        sm.from_sock = event_num[i].data.fd;
+                        sm.from_sock = epoll->GetEvents_fd(i);
                         pthread_create(&PID, NULL, thread_siliao, (void*)&sm);
                     }
                     else if (msg.substr(0, 6) == "VIDEO:")
                     {
                         sockaddr_in addr;
                         socklen_t addr_size = sizeof(struct sockaddr_in);
-                        getpeername(event_num[i].data.fd, (struct sockaddr*)&addr, &addr_size);
-                        string sendmsg = "TOVIDEO:##" + to_string(event_num[i].data.fd) + "##" + inet_ntoa(addr.sin_addr);
+                        getpeername(epoll->GetEvents_fd(i), (struct sockaddr*)&addr, &addr_size);
+                        string sendmsg = "TOVIDEO:##" + to_string(epoll->GetEvents_fd(i)) + "##" + inet_ntoa(addr.sin_addr);
                         cout << sendmsg << endl;
                         char buf[sendmsg.size()];
                         strcpy(buf, sendmsg.data());
@@ -512,7 +533,7 @@ void Server(char* arg)
                         {
                             sockaddr_in addr;
                             socklen_t addr_size = sizeof(struct sockaddr_in);
-                            getpeername(event_num[i].data.fd, (struct sockaddr*)&addr, &addr_size);
+                            getpeername(epoll->GetEvents_fd(i), (struct sockaddr*)&addr, &addr_size);
                             sendmsg += "yes##";
                             sendmsg += inet_ntoa(addr.sin_addr);
                         }
@@ -533,9 +554,9 @@ void Server(char* arg)
             }
         }
     }
-    close(server_sock);
-    close(event_fd);
-    delete[]event_num;
+    close(Socket_sock->GetS_Sock());
+    close(epoll->GetEpoll_fd());
+    //delete[]event_num;
     return;
 }
 
