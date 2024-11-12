@@ -3,4 +3,7 @@
   正在验证体系结构
   正在验证体系结构
   正在启动远程生成
+  正在编译源:
+  Mysql.cpp
   正在链接对象
+  Linux_Server.vcxproj -> D:\vs\Linux_Server\Linux_Server\bin\x64\Debug\Linux_Server.out

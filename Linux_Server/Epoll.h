@@ -1,4 +1,6 @@
 #include<sys/epoll.h>
+#include<iostream>
+#include<unistd.h>
 #pragma once
 class Epoll
 {

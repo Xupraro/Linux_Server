@@ -7,6 +7,8 @@ Epoll::Epoll()
 
 Epoll::~Epoll()
 {
+	close(this->epoll_fd);
+	std::cout << "close epoll:" << this->epoll_fd << std::endl;
 	delete[]this->events;
 }
 

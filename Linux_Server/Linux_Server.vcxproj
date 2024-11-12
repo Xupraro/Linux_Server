@@ -77,16 +77,22 @@
   <ItemGroup>
     <ClCompile Include="Epoll.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mysql.cpp" />
     <ClCompile Include="Socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Epoll.h" />
+    <ClInclude Include="Mysql.h" />
     <ClInclude Include="Socket.h" />
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <LibraryDependencies>mysqlclient;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>mysqlclient;jsoncpp;%(LibraryDependencies)</LibraryDependencies>
     </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
