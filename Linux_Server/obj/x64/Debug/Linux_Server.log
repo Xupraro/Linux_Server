@@ -4,6 +4,15 @@
   正在验证体系结构
   正在启动远程生成
   正在编译源:
+  Epoll.cpp
+  main.cpp
   Mysql.cpp
+  Socket.cpp
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(13,26): warning : comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<int>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(13,26): warning :    13 |         for (int i = 0;i < this->clients.size();++i)
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(13,26): warning :       |                        ~~^~~~~~~~~~~~~~~~~~~~~~
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(98,34): warning : conversion from ‘std::vector<int>::size_type’ {aka ‘long unsigned int’} to ‘int’ may change value [-Wconversion]
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(98,34): warning :    98 |         return this->clients.size();
+D:\vs\Linux_Server\Linux_Server\Socket.cpp(98,34): warning :       |                ~~~~~~~~~~~~~~~~~~^~
   正在链接对象
   Linux_Server.vcxproj -> D:\vs\Linux_Server\Linux_Server\bin\x64\Debug\Linux_Server.out

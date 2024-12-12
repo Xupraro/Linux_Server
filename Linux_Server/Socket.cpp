@@ -2,8 +2,6 @@
 
 Socket::Socket()
 {
-	/*this->Client_Count = 0;
-	this->clients = new int[1024] {0};*/
 	opt = 1;
 	this->client_len = sizeof(this->Client_Sock);
 }
@@ -50,6 +48,7 @@ void Socket::Client_Del(int Client_fd)
 {
 	auto it = std::find(this->clients.begin(), this->clients.end(), Client_fd);
 	this->clients.erase(it);
+	close(Client_fd);
 }
 
 int Socket::Server_Socket()
@@ -75,7 +74,7 @@ int Socket::Server_Bind()
 
 int Socket::Server_Listen()
 {
-	return listen(this->Server_Sock, 5);
+	return listen(this->Server_Sock, 10);
 }
 
 int Socket::Server_Accept()
@@ -107,4 +106,10 @@ int Socket::GetClients_fd(int i)
 std::vector<int>& Socket::GetClients()
 {
 	return this->clients;
+}
+
+std::string Socket::GetClient_ip(int i)
+{
+	getpeername(i, (struct sockaddr*)&this->client_addr, &this->client_len);
+	return inet_ntoa(this->client_addr.sin_addr);
 }

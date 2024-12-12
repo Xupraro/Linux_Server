@@ -23,9 +23,8 @@ public:
 	int GetClient_Count();
 	int GetClients_fd(int i);
 	std::vector<int>& GetClients();
+	std::string GetClient_ip(int i);
 private:
-	/*int* clients;
-	int Client_Count;*/
 	int Server_Sock, Client_Sock, opt;
 	uint16_t port;
 	socklen_t client_len;
